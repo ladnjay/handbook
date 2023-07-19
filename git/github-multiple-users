@@ -1,0 +1,15 @@
+# generate an ssh-key
+ssh-keygen -t ecdsa -C "ladnjay@gmail.com"
+
+# copy the ssh public key to github tell ssh about the key
+ssh-add ~/.ssh/ladnjay-key-ecdsa
+
+# add as below to ssh config file
+Host ladnjay.github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/ladnjay-key-ecdsa
+
+# add or update remote origin in git repository
+git remote add origin git@ladnjay.github.com:ladnjay/handbook.git
+git remote set-url origin git@ladnjay.github.com:ladnjay/handbook.git

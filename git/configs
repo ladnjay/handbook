@@ -1,0 +1,3 @@
+# set username and email for git
+git config --local user.name "ladnjay"
+git config --local user.email ladnjay@gmail.com
