@@ -1,0 +1,17 @@
+# list drupal versions
+composer show drupal/recommended-project --all
+
+# create initial project with version
+composer create-project drupal/recommended-project:10.1.1 my-project
+
+# set initial configs
+cd my-project
+composer config vendor-dir vendor
+composer config repositories.1 composer https://asset-packagist.org
+composer config preferred-install dist
+
+# install initial modules
+composer require drush/drush:^10.0 --no-update
+composer require drupal/stage_file_proxy --no-update
+composer require drupal/mysql56 --no-update
+composer require cweagans/composer-patches --no-update
