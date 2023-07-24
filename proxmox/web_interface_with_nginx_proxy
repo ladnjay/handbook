@@ -1,0 +1,50 @@
+# https://pve.proxmox.com/wiki/Web_Interface_Via_Nginx_Proxy
+
+# install nginx
+apt install nginx
+
+# remove the default config file
+rm /etc/nginx/sites-enabled/default
+
+# create a new config file
+vim /etc/nginx/conf.d/proxmox.conf
+
+upstream proxmox {
+    server hyp.ladnjay.io;
+}
+
+server {
+    listen 80 default_server;
+    rewrite ^(.*) https://$host$1 permanent;
+}
+
+server {
+    listen 443 ssl;
+    server_name hp.ladnjay.io;
+
+    ssl_certificate /etc/pve/nodes/hyp/ladnjay.io.crt;
+    ssl_certificate_key /etc/pve/nodes/hyp/ladnjay.io.key;
+
+    proxy_redirect off;
+
+    location / {
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_pass https://127.0.0.1:8006;
+        proxy_buffering off;
+
+        client_max_body_size 0;
+
+        proxy_connect_timeout 3600s;
+        proxy_read_timeout 3600s;
+        proxy_send_timeout 3600s;
+        send_timeout 3600s;
+    }
+}
+
+# verify syntax
+nginx -t 
+
+# estart nginx
+systemctl restart nginx
